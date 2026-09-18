@@ -23,11 +23,11 @@
     --color-bg-page: #f4f4f4;       /* page background on activity/project pages */
     --color-bg-card: #ffffff;       /* white card/container background */
     --color-bg-overlay: rgba(74, 122, 110, 0.5); /* translucent header/hero overlay */
-
+    --bg-header: url('images/header.jpg');
     /* Typography */
     --font-body: Arial, Helvetica, sans-serif;
 
     /* Shape */
     --radius: 10px;
     --container-max: 800px;
-}
+ 
