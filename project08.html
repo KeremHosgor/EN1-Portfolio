@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Project 8: Astronaut Tools</title>
+	<link rel="stylesheet" href="./project.css">
+</head>
+<body>
+
+	<header class="header">
+		<nav class="navbar">
+			<a href="./index.html" class="active">Home</a>
+		</nav>
+	</header>
+
+	<div class="proj-container">
+
+		<h1 class="proj-header">Project Portfolio</h1>
+
+		<h2 class="proj-header">Project 8: Astronaut Tools</h2>
+
+		<div class="proj-desc">
+			<p>This program checks a Force Sensor on port D. While it is pressed, motors on ports A, C, and E run at 360 degrees per second and the hub power light is blue. When the sensor is released, the motors stop and the light turns yellow.</p>
+		</div>
+
+		<div class="proj-code">
+			<h3>Code:</h3>
+			<pre><code># Motors are connected to ports A, C, and E.
+# The Force Sensor is connected to port D.
+from hub import port, light
+import runloop
+import motor
+import force_sensor
+import color
+
+# Set the motor speed in degrees per second.
+MOTOR_SPEED = 360
+
+async def main():
+    # Keep checking the Force Sensor.
+    while True:
+        if force_sensor.pressed(port.D):
+            # Run the motors and set the power button to blue while pressed.
+            motor.run(port.A, MOTOR_SPEED)
+            motor.run(port.C, MOTOR_SPEED)
+            motor.run(port.E, MOTOR_SPEED)
+            light.color(light.POWER, color.BLUE)
+        else:
+            # Stop the motors and set the power button to yellow when released.
+            motor.stop(port.A)
+            motor.stop(port.C)
+            motor.stop(port.E)
+            light.color(light.POWER, color.YELLOW)
+
+        # Wait briefly before checking the sensor again.
+        await runloop.sleep_ms(20)
+
+runloop.run(main())</code></pre>
+		</div>
+
+	</div>
+
+</body>
+</html>
