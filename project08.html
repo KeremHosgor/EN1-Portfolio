@@ -16,45 +16,75 @@
 
 		<h1 class="proj-header">Project Portfolio</h1>
 
+		<div class="proj-img-container">
+			<img src="./images/my_firstastronouttool.jpg" alt="Photograph of the first astronaut tools design">
+		</div>
+
 		<h2 class="proj-header">Project 8: Astronaut Tools</h2>
 
 		<div class="proj-desc">
-			<p>This program checks a Force Sensor on port D. While it is pressed, motors on ports A, C, and E run at 360 degrees per second and the hub power light is blue. When the sensor is released, the motors stop and the light turns yellow.</p>
+			<p>The astronaut tool did not work as intended because the nuts would not move; the gray mills were too wide.</p>
 		</div>
 
 		<div class="proj-code">
-			<h3>Code:</h3>
-			<pre><code># Motors are connected to ports A, C, and E.
+			<h3>Python Code:</h3>
+			<pre><code># Motor is connected to port C.
 # The Force Sensor is connected to port D.
-from hub import port, light
+from hub import port
 import runloop
 import motor
 import force_sensor
-import color
 
-# Set the motor speed in degrees per second.
-MOTOR_SPEED = 360
+# Set the motor's maximum speed in degrees per second.
+MAX_SPEED = 660
 
 async def main():
+    # Set the direction for the first press.
+    direction = 1
+    was_pressed = False
+
     # Keep checking the Force Sensor.
     while True:
-        if force_sensor.pressed(port.D):
-            # Run the motors and set the power button to blue while pressed.
-            motor.run(port.A, MOTOR_SPEED)
-            motor.run(port.C, MOTOR_SPEED)
-            motor.run(port.E, MOTOR_SPEED)
-            light.color(light.POWER, color.BLUE)
+        pressed = force_sensor.pressed(port.D)
+
+        if pressed:
+            # Reverse direction when a new press begins.
+            if not was_pressed:
+                direction = -direction
+
+            # Set the motor speed based on how hard the sensor is pressed.
+            force = force_sensor.force(port.D)
+            speed = int(force * MAX_SPEED / 100)
+
+            # Run the motor in the selected direction.
+            motor.run(port.C, direction * speed)
         else:
-            # Stop the motors and set the power button to yellow when released.
-            motor.stop(port.A)
+            # Stop the motor when the sensor is released.
             motor.stop(port.C)
-            motor.stop(port.E)
-            light.color(light.POWER, color.YELLOW)
+
+        # Remember the press state for the next check.
+        was_pressed = pressed
 
         # Wait briefly before checking the sensor again.
         await runloop.sleep_ms(20)
 
 runloop.run(main())</code></pre>
+		</div>
+
+		<div class="proj-desc">
+			<h3>What the Code Does</h3>
+			<p>The code repeatedly checks the Force Sensor on port D. When the sensor is pressed, the motor on port C runs; pressing harder increases its speed, up to the maximum of 660 degrees per second. The motor reverses direction each time a new press begins and stops when the sensor is released. The short wait lets the program check the sensor again. This controls the motor, but it cannot make the nuts move if the tool's gray mills are too wide to grip them.</p>
+		</div>
+
+		<div class="proj-video-container">
+			<iframe src="https://www.youtube.com/embed/s7h4SHP25Ko" title="Project 8 Astronaut Tools video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+		</div>
+		<p>My best time is shown on the right-hand side, and it takes about 22 seconds.</p>
+		<p><a href="https://youtu.be/s7h4SHP25Ko" target="_blank" rel="noopener">Watch the Project 8 video on YouTube</a></p>
+
+		<div class="proj-desc">
+			<h3>Final Reflection</h3>
+			<p>Working with gloves was difficult at first, but it became easier with practice. The one-hand rule made this a challenge to complete using only one hand. For a real astronaut, I would make the tool stronger so it could grip the nuts more reliably; mine sometimes broke during use.</p>
 		</div>
 
 	</div>
