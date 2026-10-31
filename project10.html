@@ -22,6 +22,13 @@
 
         <h2 class="proj-header">Project 10: Haunted House</h2>
 
+        <div class="proj-desc">
+            <h3>Technical Demonstration</h3>
+            <p>The haunted house uses two hubs to connect a motor-triggered input to a moving gate. Hub A monitors the Medium Motor on port A. It compares the motor's current position with the position recorded after its last return. When the difference reaches the 15-degree pull threshold, Hub A broadcasts a 1 to signal that the pull was detected, waits 300 milliseconds, and returns the motor to its 180-degree home angle.</p>
+            <p>The hubs communicate through the "!F" Beacon and Scanner message channel. A broadcast value of 0 means Hub A is ready; a value of 1 means a pull was detected. Hub B only accepts a 1 after it has received a 0, and disarms after accepting the trigger so repeated 1 messages do not start another sequence.</p>
+            <p>After a valid trigger, Hub B pairs the gate motors on ports E and F and moves them together. It also uses the motor on port D to press and release a button. The sequence opens the gate, presses the button, waits five seconds, closes the gate, and presses the button again. Hub B then waits for a new ready signal before accepting another pull.</p>
+        </div>
+
         <div class="proj-code">
             <h3>Hub A</h3>
             <p>Setup: Medium Motor on port A; Hub B listens for "!F".</p>
