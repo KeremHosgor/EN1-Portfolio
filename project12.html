@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Project 12: Fruit Scanner</title>
+    <link rel="stylesheet" href="./project.css">
+</head>
+<body>
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="./index.html" class="active">Home</a>
+        </nav>
+    </header>
+
+    <div class="proj-container">
+
+        <h1 class="proj-header">Project Portfolio</h1>
+
+        <div class="proj-img-container">
+            <img src="./images/my_fruitscanner.jpg" alt="Fruit scanner project">
+        </div>
+
+        <h2 class="proj-header">Project 12: Fruit Scanner</h2>
+
+        <div class="proj-desc">
+            <p>This fruit scanner uses a color sensor to identify fruit by color. Pressing the force sensor triggers a scan, and the motor turns by a different amount for each recognized fruit color.</p>
+        </div>
+
+        <div class="proj-code">
+            <h3>Python Code</h3>
+            <pre><code># Setup: force sensor on A, color sensor on C, and motor on F.
+
+from hub import port
+import runloop
+import force_sensor
+import color_sensor
+import color
+import motor
+
+# Set the motor speed in degrees per second.
+MOTOR_SPEED = 300
+
+async def main():
+    # Keep checking for a force-sensor press.
+    while True:
+        # Wait for the force sensor to be pressed.
+        while not force_sensor.pressed(port.A):
+            await runloop.sleep_ms(20)
+
+        # Read the color detected by the sensor.
+        detected_color = color_sensor.color(port.C)
+
+        # Say which fruit matches the color and turn the motor by its assigned amount.
+        if detected_color == color.RED:
+            print("Strawberry: turn -90 degrees.")
+            await motor.run_for_degrees(port.F, -90, MOTOR_SPEED)
+        elif detected_color == color.GREEN:
+            print("Green apple: turn 90 degrees.")
+            await motor.run_for_degrees(port.F, 90, MOTOR_SPEED)
+        elif detected_color == color.BLUE:
+            print("Blueberry: turn 45 degrees.")
+            await motor.run_for_degrees(port.F, 45, MOTOR_SPEED)
+        elif detected_color == color.YELLOW:
+            print("Banana: turn 135 degrees.")
+            await motor.run_for_degrees(port.F, 135, MOTOR_SPEED)
+        elif detected_color == color.MAGENTA:
+            print("Pitaya: turn -45 degrees.")
+            await motor.run_for_degrees(port.F, -45, MOTOR_SPEED)
+        else:
+            print("Color not recognized as one of the fruit colors.")
+
+        # Wait for the force sensor to be released before another reading.
+        while force_sensor.pressed(port.A):
+            await runloop.sleep_ms(20)
+
+runloop.run(main())</code></pre>
+        </div>
+
+        <div class="proj-video-container">
+            <iframe src="https://www.youtube.com/embed/FQZFLCXNYsM" title="Project 12 Fruit Scanner video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+    </div>
+
+</body>
+</html>
